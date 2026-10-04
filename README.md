@@ -113,7 +113,32 @@ printf 'GET / HTTP/1.1\r\nHost: unicode.org\r\nConnection: close\r\n\r\n' | nc e
 **Вивід:**
 
 ```
-<повний вивід>
+HTTP/1.1 200 OK
+Date: Sun, 04 Oct 2026 18:44:00 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: close
+Server: cloudflare
+Content-Security-Policy: upgrade-insecure-requests;
+Last-Modified: Thu, 02 Mar 2023 00:38:51 GMT
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=J%2BbR%2F98x%2FPWx%2FynsRnRJr5GcydzylVZFW0bE6MWZCtxNXfzxlZqvQl8EtvwQnvQNLUbV5KmyYxm6D930R2SljMm94GlE7o9tgz1Ii5bzrXsAymC%2BCpMi6Aj5ifZ3"}]}
+Vary: Accept-Encoding
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-cache-status: DYNAMIC
+CF-RAY: a45655db6f2fd3b9-FRA
+
+db
+<html><head>
+<meta http-equiv="refresh" content="0; url=http://home.unicode.org/">
+<title>Index</title>
+</head>
+<body>
+Automatic redirect: <a href="http://home.unicode.org/">http://home.unicode.org/</a>
+</body></html>
+
+
+0
+
 ```
 
 #### A.3.2. Неіснуюче ім'я в полі `Host`
@@ -127,7 +152,17 @@ printf 'GET / HTTP/1.1\r\nHost: opism-pr02.invalid\r\nConnection: close\r\n\r\n'
 **Вивід:**
 
 ```
-<повний вивід>
+HTTP/1.1 409 Conflict
+Date: Sun, 04 Oct 2026 18:46:13 GMT
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 16
+Connection: close
+X-Frame-Options: SAMEORIGIN
+Referrer-Policy: same-origin
+Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Expires: Thu, 01 Jan 1970 00:00:01 GMT
+Server: cloudflare
+CF-RAY: a456591d182c78c0-FRA
 ```
 
 #### A.3.3. Запит без поля `Host` у версії 1.0
@@ -141,7 +176,19 @@ printf 'GET / HTTP/1.0\r\n\r\n' | nc example.com 80
 **Вивід:**
 
 ```
-<повний вивід>
+HTTP/1.1 403 Forbidden
+Date: Sun, 04 Oct 2026 18:53:19 GMT
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 17
+Connection: close
+Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Expires: Thu, 01 Jan 1970 00:00:01 GMT
+Referrer-Policy: same-origin
+X-Frame-Options: SAMEORIGIN
+Server: cloudflare
+CF-RAY: a45663866b24d242-FRA
+
+error code: 1003
 ```
 
 Зведення результатів наведено в **Додатку Д**.
@@ -159,12 +206,45 @@ printf 'GET /opism-pr02-12345 HTTP/1.1\r\nHost: example.com\r\n\r\nGET / HTTP/1.
 **Вивід:**
 
 ```
-<повний вивід>
+HTTP/1.1 404 Not Found
+Date: Sun, 04 Oct 2026 18:53:56 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: cloudflare
+Age: 5774
+cf-cache-status: HIT
+CF-RAY: a456646dc9aed259-FRA
+alt-svc: h3=":443"; ma=86400
+
+241
+<!doctype html><html lang=en><head><meta charset=utf-8><link rel=icon href=data:,><meta name=viewport content="width=device-width,initial-scale=1"><title>Example Domain</title><style>html{color-scheme:light dark;background:light-dark(#eee,#222)}body{font:16px/1.6 system-ui,sans-serif;max-width:26em;margin:auto;padding:25vh 2em 2em;text-align:center}</style></head><body><p>This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.</p><script src=/s.js></script></body></html>
+
+0
+
+HTTP/1.1 200 OK
+Date: Sun, 04 Oct 2026 18:53:56 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: close
+Server: cloudflare
+Last-Modified: Fri, 02 Oct 2026 16:11:02 GMT
+Allow: GET, HEAD
+Accept-Ranges: bytes
+Age: 2
+cf-cache-status: HIT
+CF-RAY: a456646de9ecd259-FRA
+alt-svc: h3=":443"; ma=86400
+
+241
+<!doctype html><html lang=en><head><meta charset=utf-8><link rel=icon href=data:,><meta name=viewport content="width=device-width,initial-scale=1"><title>Example Domain</title><style>html{color-scheme:light dark;background:light-dark(#eee,#222)}body{font:16px/1.6 system-ui,sans-serif;max-width:26em;margin:auto;padding:25vh 2em 2em;text-align:center}</style></head><body><p>This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.</p><script src=/s.js></script></body></html>
+
+0
 ```
 
-**Кількість отриманих відповідей:**
+**Кількість отриманих відповідей: 2 **
 
-**Коди стану отриманих відповідей:**
+**Коди стану отриманих відповідей:404 та 200 **
 
 ---
 
@@ -283,18 +363,19 @@ read:errno=0
 
 | № | Поле заголовка | Значення | Призначення (власне формулювання) | Походження: сервер / проміжний вузол / не визначено | Обґрунтування |
 |---|---|---|---|---|---|
-| 1 | Date| Sat, 03 Oct 2026 21:24:38 GMT|Показує точний час і дату, коли сервер сформував цю відповідь | сервер|Сервер автоматично генерує цей заголовок в момент відправки, щоб клієнт знав дійсний час |
-| 2 |Content-Type | text/html; charset=utf-8| Описує формат переданих даних(у нас це HTML-код) та кодування символів|сервер | Вказується для того щоб браузер зрозумів, як саме відображати отриманий текст|
-| 3 | Transfer-Encoding|chunked | Вказує, що тіло відповіді передається частинами(розбитий на фрагменти), а не цілим файлом одразу|сервер | Використовується коли повний розмір сторінки заздалегідь невідомий|
-| 4 |Connection | close| Означає що після завершення передачі даних з'єднання буде закрито| сервер| Ми самі написали Connection: close у запиті, і сервер підтверджує це у відповіді закриваючи|
-| 5 | Server| cloudflare| Означає яке програмне забезпечення чи сервіс обробили запит| проміжний вузол|виступає як проксі |
-| 6 | Last-Modified| Fri, 02 Oct 2026 16:11:13 GMT|Дата і час останньої зміни цього ресурсу на сервері | сервер| |
-| 7 | Allow| GET, HEAD|Перераховує HTTP-методи які підтримує цей ресурс | сервер| Допомагає зрозуміти які запити сюди взагалі можна надсилати(наприклад: GET або HEAD працюють, а POST чи PUT ні)|
-| 8 |Accept-Ranges | bytes| Показує чи підтримує сервер запити на завантаження файлу частинами|сервер | Значення bytes означає, що можна завантажувати файл частинами|
-| 9 |Age | 4370| Час у секундах |Не визначено | Недостатньо знань|
-| 10 |cf-cache-status |HIT| | Не визначено|  Недостатньо знань|
-| 11|CF-RAY |a44f03c53de7ca4d-KBP| |Не визначено| Недостатньо знань |
-| 12 |alt-svc | h3=":443"; ma=86400| |Не визначено| Недостатньо знань|
+| 1 |HTTP/1.1  |200 OK|Повідомляє, що HTTP-запит успішно оброблено сервером |Сервер |Відповідь із кодом стану 200 OK показує,що запит клієнта успішно оброблений|
+| 2 | Date| Sat, 03 Oct 2026 21:24:38 GMT|Показує точний час і дату, коли сервер сформував цю відповідь | сервер|Сервер автоматично генерує цей заголовок в момент відправки, щоб клієнт знав дійсний час |
+| 3 |Content-Type | text/html; charset=utf-8| Описує формат переданих даних(у нас це HTML-код) та кодування символів|сервер | Вказується для того щоб браузер зрозумів, як саме відображати отриманий текст|
+| 4 | Transfer-Encoding|chunked | Вказує, що тіло відповіді передається частинами(розбитий на фрагменти), а не цілим файлом одразу|сервер | Використовується коли повний розмір сторінки заздалегідь невідомий|
+| 5 |Connection | close| Означає що після завершення передачі даних з'єднання буде закрито| сервер| Ми самі написали Connection: close у запиті, і сервер підтверджує це у відповіді закриваючи|
+| 6 | Server| cloudflare| Означає яке програмне забезпечення чи сервіс обробили запит| проміжний вузол|виступає як проксі |
+| 7 | Last-Modified| Fri, 02 Oct 2026 16:11:13 GMT|Дата і час останньої зміни цього ресурсу на сервері | сервер| |
+| 8 | Allow| GET, HEAD|Перераховує HTTP-методи які підтримує цей ресурс | сервер| Допомагає зрозуміти які запити сюди взагалі можна надсилати(наприклад: GET або HEAD працюють, а POST чи PUT ні)|
+| 9 |Accept-Ranges | bytes| Показує чи підтримує сервер запити на завантаження файлу частинами|сервер | Значення bytes означає, що можна завантажувати файл частинами|
+| 10 |Age | 4370| Час у секундах |Не визначено | Недостатньо знань|
+| 11 |cf-cache-status |HIT| | Не визначено|  Недостатньо знань|
+| 12|CF-RAY |a44f03c53de7ca4d-KBP| |Не визначено| Недостатньо знань |
+| 13 |alt-svc | h3=":443"; ma=86400| |Не визначено| Недостатньо знань|
 
 
 ---
@@ -305,7 +386,7 @@ read:errno=0
 
 **D.1.** Що з поведінки сервера виявилося неочевидним або несподіваним. Конкретно, з посиланням на рядок виводу.
 
-<Несподіваним виявилося те, що після введення команди  "printf 'GET /opism-pr02-12345 HTTP/1.1\r\nHost: example.com\r\n\r\nGET / HTTP/1.1\r\nHost:example.com\r\nConnection: close\r\n\r\n' | nc -C example.com 80" жодної відповіді від сервера не було>
+<Несподіваним виявилося те, що після введення команди printf 'GET / HTTP/1.0\r\n\r\n' | nc example.com 80 у кінці виводу з’явився рядок error code: 1003 >
 
 **D.2.** Яке з полів заголовка викликало найбільше утруднення при визначенні походження (частина B) та з якої причини.
 
@@ -317,7 +398,7 @@ alt-svc: h3=":443"; ma=86400
 
 **D.3.** Яке питання залишилося без відповіді після виконання роботи.
 
-<текст>
+<У завданні А.3.1 у виводі не було зазначено обсяг тіла відповіді у стандартному вигляді Content-Length. Як у такому випадку дізнатися розмір? >
 
 ---
 
@@ -329,11 +410,16 @@ alt-svc: h3=":443"; ma=86400
 
 **2.** Порівняйте результати завдань A.1, A.2 та A.3.1–A.3.3 (таблиця Додатка Д). За яких значень поля `Host` і за якої версії протоколу сервер обслуговує запит, а за яких — ні? Яку задачу розв'язує поле `Host`? Відповідь має посилатися на конкретні рядки ваших виводів.
 
-<відповідь>
+< В A.1 та A.3.1 видно, що сервер успішно обробляє запит, коли в полі Host вказано правильне доменне ім’я. Наприклад: у A.1 при Host: example.com сервер повернув HTTP/1.1 200 OK, а в A.3.1 при Host: unicode.org також отримано HTTP/1.1 200 OK
+
+В A.2, де використовується HTTP/1.1 без поля Host, сервер повертає HTTP/1.1 400 Bad Request, оскільки для HTTP/1.1 цей заголовок є обов’язковим. В A.3.2 з неіснуючим доменом opism-pr02.invalid отримуємо HTTP/1.1 409 Conflict. В A.3.3 при використанні HTTP/1.0 без Host сервер повертає HTTP/1.1 403 Forbidden
+Отже, поле Host допомагає серверу визначити, до якого саме сайту звертається клієнт, особливо коли на одній IP-адресі розміщено декілька сайтів>
 
 **3.** Скільки відповідей надійшло у завданні A.4 і з якими кодами стану? Чи залежить відповідь сервера на порту 80 від запитаного шляху — і що це говорить про роль цього сервера? Якщо надійшла одна відповідь, знайдіть у ній поле заголовка, яке це пояснює, або зазначте, що такого поля немає. Якщо надійшло дві — що це означає для клієнтської програми, яка завантажує сторінку з великою кількістю вкладених ресурсів?
 
-<відповідь>
+<У завданні A.4 надійшло дві відповіді: перша з кодом 404 Not Found, а друга - 200 OK.
+Так, відповідь сервера на порту 80 залежить від запитаного шляху.Для /opism-pr02-12345 він повернув 404 Not Found, бо такого шляху немає, а для / — 200 OK тому що сторінка існує. Це показує, що сервер приймає HTTP-запити та повертає різну відповідь залежно від того, що саме ми запитали
+Дві відповіді в одному з’єднанні означають, що клієнт може робити кілька запитів без створення нового з’єднання>
 
 **4.** Які поля заголовка програма `curl` додала самостійно (завдання A.5)? Ці поля не є обов'язковими — сервер відповів і без них у завданні A.1. З якою метою їх додано?
 
@@ -365,13 +451,14 @@ alt-svc: h3=":443"; ma=86400
 |---|---|---|---|---|---|
 | A.1 (вихідна) |example.com | 1.1 |200 | 241| — |
 | A.2 | поле відсутнє | 1.1 | 400| 155|ні|
-| A.3.1 | | 1.1 | | | |
-| A.3.2 | `opism-pr02.invalid` | 1.1 | | | |
-| A.3.3 | поле відсутнє | 1.0 | | | |
+| A.3.1 | unicode.org| 1.1 | 200| | ні|
+| A.3.2 | `opism-pr02.invalid` | 1.1 | 409| 16|ні |
+| A.3.3 | поле відсутнє | 1.0 | 403| 17| ні|
 
 **Висновок за таблицею (2–4 речення):** що саме змінювалося у запиті від проби до проби і як на це реагував сервер.
 
-<текст>
+<У кожній пробі ми по-різному змінювали запит: прибирали Host, змінювали його значення або використовували іншу версію HTTP. 
+Сервер на це реагував по-різному: коли Host був правильний - повертав 200 OK, а при неправильному або відсутньому Host повертав помилки 400, 409 або 403. Це показує, що для сервера важливо, яке саме ім’я вказане в Host і в якому форматі зроблений запит>
 
 ---
 
@@ -386,8 +473,8 @@ alt-svc: h3=":443"; ma=86400
 
 | № | Інструмент (назва, версія) | Етап роботи | Дослівний текст запиту (промпту) | Як використано результат |
 |---|---|---|---|---|
-| 1 | Gemini 3.5 Flash-Lite| Часина В| А сервер cloudflare може виступати як проксі ? | Записано в обґрунтуванні: «виступає як проксі»|
-| 2 | Gemini 3.5 Flash-Lite| Частина D| Перевір чи тут(мається на увазі саме відповіді-висновки) є 300 слів?| |
+| 1 | Gemini 3.5 Flash-Lite| Часина В| Чи сервер cloudflare може виступати як проксі ? | Записано в обґрунтуванні: «виступає як проксі»|
+| 2 | Gemini 3.5 Flash-Lite| Часина А| Що означає код стану 409? | Дізналася для себе точніше, що це означає, і записала в конспект|
 
 **Підтвердження:** усі виводи команд, наведені в частині A, отримано внаслідок фактичного виконання команд на зазначеному індивідуальному домені.
 
